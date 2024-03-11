@@ -1,0 +1,31 @@
+# Vagrant file for openstack node
+# Last modify 2024/03/03
+# Version 1.2
+
+IMAGE_NAME = "bento/ubuntu-22.04"
+VM_RAM = "8192"
+VM_CPU = "8"
+
+ENV['VAGRANT_NO_PARALLEL'] = 'yes' # For don't run concurrency
+
+Vagrant.configure("2") do |config|
+
+    OpenStackNode = 3 # Define number of node
+    (1..OpenStackNode).each do |openstack_id|
+        config.vm.define "osa-node-#{openstack_id}" do |openstack_vm|
+        openstack_vm.vm.box = IMAGE_NAME
+        openstack_vm.vm.hostname = "osa-node-#{openstack_id}"
+        openstack_vm.vm.network "public_network", ip: "172.29.236.7#{openstack_id}" # For managment network
+        openstack_vm.vm.network "public_network", ip: "172.29.240.7#{openstack_id}" # For overlay/tunnel network
+        openstack_vm.vm.network "public_network", ip: "172.29.244.7#{openstack_id}" # For storage network
+        openstack_vm.vm.disk :disk, size: "65GB", name: "cinder_storage" # Second disk for cinder-volumes
+        openstack_vm.vm.provider "virtualbox" do |vb|
+            vb.name = "osa-node-#{openstack_id}"
+            vb.memory = VM_RAM
+            vb.cpus = VM_CPU
+            end
+        openstack_vm.vm.provision "shell", path: "pre-config-node.sh"
+        end
+    end
+
+end

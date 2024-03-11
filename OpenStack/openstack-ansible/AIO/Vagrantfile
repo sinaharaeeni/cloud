@@ -1,0 +1,48 @@
+# Vagrant file for openstack aio
+# Last modify 2024/03/08
+# Version 2.0
+
+IMAGE_NAME = "bento/ubuntu-22.04"
+VM_RAM = "8192" # Define VM memory
+VM_CPU = "8" # Define VM CPU
+OpenStackDeploy = 1 # Define number of deploy
+OpenStackNode = 3 # Define number of node
+
+ENV['VAGRANT_NO_PARALLEL'] = 'yes' # For don't run concurrency
+
+Vagrant.configure("2") do |config|
+
+    (1..OpenStackDeploy).each do |deploy_id|
+        config.vm.define "osa-deploy-#{deploy_id}" do |deploy_vm|
+        deploy_vm.vm.box = IMAGE_NAME
+        deploy_vm.vm.hostname = "osa-deploy-#{deploy_id}"
+        deploy_vm.vm.network "public_network", ip: "172.29.236.6#{deploy_id}", bridge: "eno5" # For managment network
+        deploy_vm.vm.provision "file", source: "config/openstack_user_config.yml", destination: "/home/vagrant/openstack_user_config.yml"
+        deploy_vm.vm.provision "file", source: "config/user_variables.yml", destination: "/home/vagrant/user_variables.yml"
+        deploy_vm.vm.provider "virtualbox" do |vb|
+            vb.name = "osa-deploy-#{deploy_id}"
+            vb.memory = VM_RAM
+            vb.cpus = VM_CPU
+            end
+        deploy_vm.vm.provision "shell", path: "script/config-aio-server.sh"
+        end
+    end
+
+    (1..OpenStackNode).each do |node_id|
+        config.vm.define "osa-node-#{node_id}" do |node_vm|
+        node_vm.vm.box = IMAGE_NAME
+        node_vm.vm.hostname = "osa-node-#{node_id}"
+        node_vm.vm.network "public_network", bridge: "eno5" # For bonding
+        node_vm.vm.network "public_network", bridge: "eno5" # For bonding
+        node_vm.vm.disk :disk, size: "65GB", name: "cinder_storage" # Second disk for cinder-volumes
+        node_vm.vm.provision "file", source: "config/02-static-#{node_id}.yaml", destination: "/home/vagrant/02-static.yaml"
+        node_vm.vm.provider "virtualbox" do |vb|
+            vb.name = "osa-node-#{node_id}"
+            vb.memory = VM_RAM
+            vb.cpus = VM_CPU
+            end
+        node_vm.vm.provision "shell", path: "script/pre-config-node.sh"
+        end
+    end
+
+end

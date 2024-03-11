@@ -1,0 +1,298 @@
+---
+cidr_networks:
+  management: 172.29.236.0/22
+  tunnel: 172.29.240.0/22
+  storage: 172.29.244.0/22
+
+used_ips:
+  - 172.29.236.1
+  - "172.29.236.60,172.29.236.80"
+  - "172.29.240.60,172.29.240.80"
+  - "172.29.244.60,172.29.244.80"
+
+global_overrides:
+  internal_lb_vip_address: 172.29.236.74
+  external_lb_vip_address: 172.29.236.74
+  management_bridge: "br-mgmt"
+
+  provider_networks:
+    - network:
+        group_binds:
+          - all_containers
+          - hosts
+        container_bridge: "br-mgmt"
+        container_interface: "eth1"
+        container_type: "veth"
+        ip_from_q: "management"
+        is_management_address: true
+        static_routes:
+          - cidr: 172.29.248.0/22
+            gateway: 172.29.236.1
+        type: raw
+
+    - network:
+        group_binds:
+          - glance_api
+          - cinder_api
+          - cinder_volume
+          - nova_compute
+          - manila_share
+          - swift_proxy
+          - ceph-mon
+          - ceph-osd
+        type: "raw"
+        container_bridge: "br-storage"
+        container_type: "veth"
+        container_interface: "eth2"
+        container_mtu: "9000"
+        ip_from_q: "storage"
+
+    - network:
+        container_bridge: "br-vxlan"
+        container_interface: "eth10"
+        container_type: "veth"
+        group_binds:
+          - neutron_ovn_controller
+        ip_from_q: "tunnel"
+        net_name: "geneve"
+        range: "1:1000"
+        type: "geneve"
+
+    - network:
+        container_bridge: "br-provider"
+        group_binds:
+          - neutron_ovn_gateway
+        net_name: "vlan"
+        network_interface: "eth12"
+        range: "101:200,301:400"
+        type: "vlan"
+
+    - network:
+        container_bridge: "br-provider"
+        container_type: "veth"
+        group_binds:
+          - neutron_ovn_gateway
+        net_name: "vlan"
+        type: "flat"
+
+shared-infra_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+repo-infra_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+## Keystone
+identity_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+coordination_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+os-infra_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+placement-infra_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+image_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+network_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+compute-infra_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+compute_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+orchestration_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+dashboard_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+
+#
+# Level: ironic-compute_hosts (optional)
+# List of target hosts on which to deploy the nova compute service for Ironic.
+# Recommend one minimum target host for this service. Typically contains target
+# hosts that do not reside in other levels.
+#
+#   Level: <value> (required, string)
+#   Hostname of a target host.
+#
+#     Option: ip (required, string)
+#     IP address of this target host, typically the IP address assigned to
+#     the management bridge.
+#
+# Example:
+#
+# Define an OpenStack compute host:
+#
+# ironic-compute_hosts:
+#   ironic-infra1:
+#     ip: 172.29.236.121
+#
+
+storage-infra_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+storage_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+# Example:
+#
+# Use the LVM iSCSI backend in availability zone 'cinderAZ_1':
+#
+#     container_vars:
+#       cinder_storage_availability_zone: cinderAZ_1
+#       cinder_default_availability_zone: cinderAZ_1
+#       cinder_backends:
+#         lvm:
+#           volume_backend_name: LVM_iSCSI
+#           volume_driver: cinder.volume.drivers.lvm.LVMVolumeDriver
+#           volume_group: cinder-volumes
+#           iscsi_ip_address: "{{ cinder_storage_address }}"
+#         limit_container_types: cinder_volume
+
+# Example:
+#
+# Use the ceph RBD backend in availability zone 'cinderAZ_3':
+
+    container_vars:
+      cinder_storage_availability_zone: cinderAZ_3
+      cinder_default_availability_zone: cinderAZ_1
+      cinder_backends:
+        limit_container_types: cinder_volume
+        volumes_hdd:
+          volume_driver: cinder.volume.drivers.rbd.RBDDriver
+          rbd_pool: volumes_hdd
+          rbd_ceph_conf: /etc/ceph/ceph.conf
+          rbd_flatten_volume_from_snapshot: 'false'
+          rbd_max_clone_depth: 5
+          rbd_store_chunk_size: 4
+          rados_connect_timeout: -1
+          volume_backend_name: volumes_hdd
+          rbd_user: "{{ cinder_ceph_client }}"
+          rbd_secret_uuid: "{{ cinder_ceph_client_uuid }}"
+
+# Ceph cluster
+ceph-mon_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+ceph-osd_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+ceph-rgw_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+ceph-mds_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+ceph-nfs_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+
+haproxy_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73

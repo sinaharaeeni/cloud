@@ -1,0 +1,334 @@
+---
+cidr_networks:
+  management: 172.29.236.0/22
+  tunnel: 172.29.240.0/22
+  storage: 172.29.244.0/22
+
+used_ips:
+  - 172.29.236.1
+  - "172.29.236.60,172.29.236.80"
+  - "172.29.240.60,172.29.240.80"
+  - "172.29.244.60,172.29.244.80"
+
+global_overrides:
+  internal_lb_vip_address: 172.29.236.74
+  external_lb_vip_address: 172.29.236.74
+  management_bridge: "br-mgmt"
+  no_containers: true
+  provider_networks:
+    - network:
+        group_binds:
+          - all_containers
+          - hosts
+        container_bridge: "br-mgmt"
+        container_interface: "eth1"
+        container_type: "veth"
+        ip_from_q: "management"
+        is_management_address: true
+        static_routes:
+          - cidr: 172.29.248.0/22
+            gateway: 172.29.236.1
+        type: raw
+
+    - network:
+        group_binds:
+          - glance_api
+          - cinder_api
+          - cinder_volume
+          - nova_compute
+          - manila_share
+          - swift_proxy
+          - ceph-mon
+          - ceph-osd
+        type: "raw"
+        container_bridge: "br-storage"
+        container_type: "veth"
+        container_interface: "eth2"
+        container_mtu: "9000"
+        ip_from_q: "storage"
+
+    - network:
+        container_bridge: "br-vxlan"
+        container_interface: "eth10"
+        container_type: "veth"
+        group_binds:
+          - neutron_ovn_controller
+        ip_from_q: "tunnel"
+        net_name: "geneve"
+        range: "1:1000"
+        type: "geneve"
+
+    - network:
+        container_bridge: "br-provider"
+        group_binds:
+          - neutron_ovn_gateway
+        net_name: "vlan"
+        network_interface: "eth12"
+        range: "101:200,301:400"
+        type: "vlan"
+
+    - network:
+        container_bridge: "br-provider"
+        container_type: "veth"
+        group_binds:
+          - neutron_ovn_gateway
+        net_name: "vlan"
+        type: "flat"
+
+shared-infra_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+repo-infra_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+## Keystone
+identity_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+## Glance
+image_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+## HA Proxy
+haproxy_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+## Nova API
+compute-infra_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+## Nova Compute
+compute_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+# neutron-server, neutron-agents
+network_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+## Horizon
+dashboard_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+## Cinder
+storage-infra_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+    container_vars:
+      cinder_qos_specs:
+        - name: low-iops
+          options:
+            consumer: front-end
+            read_iops_sec: 75
+            write_iops_sec: 75
+          cinder_volume_types:
+            - low-iops
+        - name: high-iops
+          options:
+            consumer: front-end
+            read_iops_sec: 150
+            write_iops_sec: 150
+          cinder_volume_types:
+            - high-iops
+        - name: ultra-high-iops
+          options:
+            consumer: front-end
+            read_iops_sec: 300
+            write_iops_sec: 300
+          cinder_volume_types:
+            - ultra-high-iops
+  osa-node-2:
+    ip: 172.29.236.72
+    container_vars:
+      cinder_qos_specs:
+        - name: low-iops
+          options:
+            consumer: front-end
+            read_iops_sec: 75
+            write_iops_sec: 75
+          cinder_volume_types:
+            - low-iops
+        - name: high-iops
+          options:
+            consumer: front-end
+            read_iops_sec: 150
+            write_iops_sec: 150
+          cinder_volume_types:
+            - high-iops
+        - name: ultra-high-iops
+          options:
+            consumer: front-end
+            read_iops_sec: 300
+            write_iops_sec: 300
+          cinder_volume_types:
+            - ultra-high-iops
+  osa-node-3:
+    ip: 172.29.236.73
+    container_vars:
+      cinder_qos_specs:
+        - name: low-iops
+          options:
+            consumer: front-end
+            read_iops_sec: 75
+            write_iops_sec: 75
+          cinder_volume_types:
+            - low-iops
+        - name: high-iops
+          options:
+            consumer: front-end
+            read_iops_sec: 150
+            write_iops_sec: 150
+          cinder_volume_types:
+            - high-iops
+        - name: ultra-high-iops
+          options:
+            consumer: front-end
+            read_iops_sec: 300
+            write_iops_sec: 300
+          cinder_volume_types:
+            - ultra-high-iops
+
+storage_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+coordination_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+os-infra_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+placement-infra_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+
+orchestration_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+    container_vars:
+      cinder_storage_availability_zone: cinderAZ_3
+      cinder_default_availability_zone: cinderAZ_1
+      cinder_backends:
+        limit_container_types: cinder_volume
+        volumes_hdd:
+          volume_driver: cinder.volume.drivers.rbd.RBDDriver
+          rbd_pool: volumes_hdd
+          rbd_ceph_conf: /etc/ceph/ceph.conf
+          rbd_flatten_volume_from_snapshot: 'false'
+          rbd_max_clone_depth: 5
+          rbd_store_chunk_size: 4
+          rados_connect_timeout: -1
+          volume_backend_name: volumes_hdd
+          rbd_user: "{{ cinder_ceph_client }}"
+          rbd_secret_uuid: "{{ cinder_ceph_client_uuid }}"
+
+## Ceph cluster
+# The infra nodes where the Ceph mon services will run
+ceph-mon_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+# The nodes that the Ceph OSD disks will be running on
+ceph-osd_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+# The nodes that the Ceph RadosGW object gateways will be running on
+ceph-rgw_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+ceph-mds_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
+
+ceph-nfs_hosts:
+  osa-node-1:
+    ip: 172.29.236.71
+  osa-node-2:
+    ip: 172.29.236.72
+  osa-node-3:
+    ip: 172.29.236.73
