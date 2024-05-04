@@ -1,0 +1,33 @@
+# Vagrant file for ceph
+# Last modify 2024/03/16
+# Version 1.0
+
+IMAGE_NAME = "bento/ubuntu-22.04"
+VM_RAM = "4096" # Define VM memory
+VM_CPU = "4" # Define VM CPU
+NetworkInterface = "eno5"
+CephkNode = 3 # Define number of node
+
+ENV['VAGRANT_NO_PARALLEL'] = 'yes' # For don't run concurrency
+
+Vagrant.configure("2") do |config|
+
+    (1..CephkNode).each do |node_id|
+        config.vm.define "ceph-node-#{node_id}" do |node_vm|
+        node_vm.vm.box = IMAGE_NAME
+        node_vm.vm.box_check_update = true
+        node_vm.vm.hostname = "ceph-node-#{node_id}"
+        node_vm.vm.network "public_network", bridge: NetworkInterface
+        node_vm.vm.disk :disk, size: "61GB", name: "storage-1"
+        node_vm.vm.disk :disk, size: "62GB", name: "storage-2"
+        node_vm.vm.disk :disk, size: "63GB", name: "storage-3"
+        node_vm.vm.provider "virtualbox" do |vb|
+            vb.name = "ceph-node-#{node_id}"
+            vb.memory = VM_RAM
+            vb.cpus = VM_CPU
+            end
+        node_vm.vm.provision "file", source: "config/02-static-#{node_id}.yaml", destination: "/home/vagrant/02-static.yaml"
+        node_vm.vm.provision "shell", path: "script/pre-config-node.sh"
+        end
+    end
+end
