@@ -1,5 +1,5 @@
 ## List of port number use in all program
-#### Last edit in 2024/06/23
+#### Last edit on 2024/06/24
 
 | External Port | Default / Internal Port | Application                |
 | :-----------: | :---------------------: | :------------------------- |
@@ -11,6 +11,7 @@
 |     8083      |          Null           | Nexus docker private       |
 |     8182      |         8291            | Mikrotik Winbox - Public   |
 |     8283      |         8291            | Mikrotik Winbox - Private  |
+|     9090      |         9090            | Cockpit web                |
 |     9091      |         3000            | Grafana web                |
 |     9092      |         8080            | cAdvisor web               |
 |     9093      |         8080            | Node Exporter query        |
