@@ -1,0 +1,18 @@
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    ens33:
+      dhcp4: false
+      dhcp6: false
+      addresses:
+        - 192.168.213.91/24
+      routes:
+        - to: default
+          via: 192.168.213.2
+      nameservers:
+        addresses:
+          - 1.1.1.1  # Cloudflare
+#          - 10.202.10.202  # 403 online
+#          - 185.55.225.25  # Begzar
+#          - 178.22.122.100  # Shecan
