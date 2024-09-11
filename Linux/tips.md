@@ -23,3 +23,10 @@ nfs.sinacomsys.local:/nfs-share/    /home/sina/nfs-share/   nfs defaults    0   
 ## Check log with journalctl
 
 - Check log sshd `journalctl -u sshd --since yesterday`
+
+## Test write speed disk
+
+- Create one big file `dd if=/dev/zero of=testfile bs=1G count=1 oflag=dsync && rm testfile`
+- Create a lot small file `dd if=/dev/zero of=testfile bs=100k count=10000 oflag=dsync && rm testfile`
+- Create one big file, bypasses the kernel's page cache (memory cache), writing directly to the storage. `dd if=/dev/zero of=testfile bs=1G count=1 oflag=direct && rm testfile`
+- Create a lot file, bypasses the kernel's page cache (memory cache), writing directly to the storage. `dd if=/dev/zero of=testfile bs=100k count=10000 oflag=direct && rm testfile`
