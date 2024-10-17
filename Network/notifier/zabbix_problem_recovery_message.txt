@@ -1,0 +1,21 @@
+
+✅ Problem Resolved on Zabbix ✅
+
+🎯 Host Server: {HOST.NAME}
+🌐 Host IP: {HOST.IP}
+📂 Host Group: {TRIGGER.HOSTGROUP.NAME}
+
+⚠️ Resolved Trigger: {TRIGGER.NAME}
+📋 Description: {TRIGGER.DESCRIPTION}
+
+🕒 Problem Start Time: {EVENT.DATE} {EVENT.TIME}
+🕒 Problem Resolved Time: {EVENT.RECOVERY.DATE} {EVENT.RECOVERY.TIME}
+⏳ Duration: {EVENT.AGE}
+
+🔧 Item Information:
+- Item Name: {ITEM.NAME}
+- Item Key: {ITEM.KEY}
+- Item Value: {ITEM.VALUE}
+
+🔁 Current Status: {TRIGGER.STATUS} (Resolved)
+📊 Recovery Details: {EVENT.RECOVERY.VALUE}

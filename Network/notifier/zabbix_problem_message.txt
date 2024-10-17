@@ -1,0 +1,13 @@
+
+🚨 Alert from Zabbix 🚨
+
+🎯 Host Server: {HOST.NAME}
+🌐 Host IP: {HOST.IP}
+📂 Host Group: {TRIGGER.HOSTGROUP.NAME}
+⚠️ Resolved Trigger: {TRIGGER.NAME}
+🚦 Severity: {TRIGGER.SEVERITY}
+🔁 Status: {TRIGGER.STATUS}
+
+🕒 Event Date: {EVENT.DATE}
+🕒 Event Time: {EVENT.TIME}
+⏳ Duration: {EVENT.AGE}
