@@ -31,3 +31,7 @@
 |     9107      |         5601            | Kibana web                 |
 |     9108      |        15672            | RabbitMQ web               |
 |    33066      |         3306            | MySQL query                |
+|     9109      |        10051            | Zabbix - Server - The listen port for trapper |
+|     9110      |         8080            | Zabbix - Front - web                          |
+|     9111      |        10050            | Zabbix - Agent - The agent will listen on this port for connections from the server. |
+|     9112      |         5432            | PostgreSQL    |
