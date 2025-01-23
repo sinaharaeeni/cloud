@@ -1,0 +1,3 @@
+.vscode/
+automation/terraform/install-vm-esxi/.terraform
+automation/terraform/install-vm-esxi/.terraform.lock.hcl
