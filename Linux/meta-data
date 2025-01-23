@@ -1,0 +1,25 @@
+#cloud-config
+autoinstall:
+  version: 1
+  identity:
+    hostname: ubuntu-vm
+    username: automate
+    password: autopass
+  keyboard:
+    layout: "us"
+  locale: "en_US.UTF-8"
+  timezone: "Asia/Tehran"
+  updates: all
+  storage:
+    layout:
+      name: lvm
+      sizing-policy: all
+  user-data:
+    disable_root: false
+  ssh:
+    install-server: true
+    authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCeEIrp3ZW96pSFn9ifMDMuTcsiAxD5ADdt1xsbR8zxR0JZL0VDUHD7f4jmh0nFZ6wTJhBMEzAHn3P55q+8AY7pWJDl5K93+xZVzwnZWvfEvu2EOiPhTGgJf32w9/QSw7G4PBYFTmShG02MKtYgDpQSMPAK2XokWjIVPB+v+ecODw8z84X27DWtzX79VOQiXhYVrWeI5cOleb8HgcG/6XJP7q4a5ggOo0AlO6m9a3lKgHvl1Vxvn5g3IG1ReHLyj21lOsB+U1MD8H2Vm1xReIFIplvpzhwS3VMS0C2RjQh8y5GMBjt8V5moN8Ur7MfBb9Dl6S9CQGd3PerOFFkTmCDsP+sbkjfxCD6zX8fV2iP6GW3pbIayV01l1k9IrMKJRNn7l3XWPJ3aztMG9GhXkodT6WVoRUYESvKvM9selAZXFO8pmIKvnDEEUlUd5xzpoaA89fc1TsbzWcQs0ThOrm16GuKzgbKiqCxzlV+S7on2zaRuUH/4kUrtndb2th3Ys3E= root@ubuntu-sina
+  packages:
+    - net-tools
+    - open-vm-tools
