@@ -1,4 +1,5 @@
 ## List of port number use in all program
+
 #### Last edit on 2024/06/24
 
 | External Port | Default / Internal Port | Application                |
@@ -35,3 +36,4 @@
 |     9110      |         8080            | Zabbix - Front - web                          |
 |     9111      |        10050            | Zabbix - Agent - The agent will listen on this port for connections from the server. |
 |     9112      |         5432            | PostgreSQL    |
+|     9113      |         Null            | Traefik - Metrik |
