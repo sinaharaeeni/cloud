@@ -6,7 +6,7 @@
 
 ```bash 
 yum clean all
-yum update
+yum update -y
 yum install -y open-vm-tools \
 nano \
 net-tools \
@@ -28,6 +28,11 @@ systemctl enable vmtoolsd.service
 * Edit ssh config
 ```bash
 nano /etc/ssh/sshd_config
+```
+
+* Restart service sshd
+```bash
+systemctl restart sshd
 ```
 
 * Set hostname
@@ -93,4 +98,10 @@ snmpwalk -v 2c -c sinacomsys 192.168.100.11
 # Show zabbix-server logs
 ```bash
 tail -f /var/log/zabbix/zabbix_server.log
+```
+
+# Add ssh key
+```bash
+mkdir -p .ssh
+echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDVUrJyZ2gaXan7KgSkdIhAg5CNOlgBiPTZuc3UmrwiRaNav3OS0PiRQbyiuD5EUvZ2Ok3XzsVU8N9uponLdx6yh6IXx/RrU8rjazs+h9/BIGIwrbJBhXO7AcHnw0m0qhepeD+od6TzBKl$" >> .ssh/authorized_keys
 ```
