@@ -9,8 +9,8 @@
 TOKEN="624030085:PEE25CbzeocWPGwonSY2CZiREdYoBF9syZWsheku"  # @sinaharaeeni_bot
 DOMAIN="https://tapi.bale.ai"
 CHAT_ID="1639070346"  # Personal accont id '1639070346'
-SUBJECT="Notification"
-MESSAGE="$1"
+SUBJECT="$1"
+MESSAGE="$2"
 
 # Send notification via Bale API
 curl --silent --max-time 10 \
